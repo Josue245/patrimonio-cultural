@@ -95,8 +95,8 @@ services:
       DB_DATABASE:       patrimonio_junin
       DB_USERNAME:       patrimonio_user
       DB_PASSWORD:       patrimonio_pass
-      GROQ_API_KEY:      "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"
-      GROQ_MODEL:        "llama-3.1-8b-instant"     
+      GROQ_API_KEY:      "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"
+      GROQ_MODEL:        "llama-3.3-70b-versatile"     
       ML_INTERNAL_TOKEN: "patrimonio-ml-internal-2024"
     depends_on:
       postgres:

@@ -54,6 +54,7 @@ class GroqService:
             ],
             max_tokens=max_tokens,
             temperature=0.2,
+            timeout=60,
         )
         return response.choices[0].message.content.strip()
 
@@ -188,12 +189,12 @@ Responde SOLO con este JSON:
             resultado_local['fuente'] = 'local-ml'
             return resultado_local
 
-        # Si hay sospechosos, Groq valida con contexto
-        if self.client and resultado_local.get('similares'):
+        # Si Groq está disponible, validar con contexto (incluso sin similares obvios)
+        if self.client:
             similares_texto = "\n".join([
                 f"- ID:{s['id']} Nombre:{s['nombre']} Similitud:{s['similitud']}"
-                for s in resultado_local['similares'][:3]
-            ])
+                for s in resultado_local.get('similares', [])[:3]
+            ]) if resultado_local.get('similares') else "No hay registros similares detectados."
 
             prompt = f"""Analiza si este bien cultural es un duplicado de los existentes:
 

@@ -18,19 +18,19 @@ class IAController extends BaseApiController
      * Clasifica el tipo de patrimonio de un bien dado nombre + descripción.
      */
     public function clasificar(Request $request): JsonResponse
-{
-    $request->validate([
-        'nombre'      => 'required_without:descripcion|string|max:300',
-        'descripcion' => 'required_without:nombre|string',
-    ]);
+    {
+        $request->validate([
+            'nombre'      => 'required_without:descripcion|string|max:300',
+            'descripcion' => 'required_without:nombre|string',
+        ]);
 
-    $resultado = $this->ml->clasificar(
-        $request->get('nombre', ''),
-        $request->get('descripcion', '')
-    );
+        $resultado = $this->ml->clasificar(
+            $request->get('nombre', ''),
+            $request->get('descripcion', '')
+        );
 
-    return $this->successResponse($resultado['data'] ?? $resultado);
-}
+        return $this->successResponse($resultado['data'] ?? $resultado);
+    }
 
     /**
      * POST /api/v1/ia/analizar
@@ -64,24 +64,25 @@ class IAController extends BaseApiController
      * Búsqueda semántica con IA en el catálogo.
      */
     public function similar(Request $request): JsonResponse
-{
-    $request->validate([
-        'query' => 'required|string|min:3|max:500',
-        'top_k' => 'sometimes|integer|min:1|max:20',
-    ]);
+    {
+        $request->validate([
+            'query' => 'required|string|min:3|max:500',
+            'top_k' => 'sometimes|integer|min:1|max:20',
+        ]);
 
-    $repo   = app(EloquentBienCulturalRepository::class);
-    $todos  = $repo->findAll(1, 200);
-    $bienes = array_map(fn($b) => $b->toArray(), $todos['data']);
+        $repo   = app(EloquentBienCulturalRepository::class);
+        $todos  = $repo->findAll(1, 200);
+        $bienes = array_map(fn($b) => $b->toArray(), $todos['data']);
 
-    $resultado = $this->ml->buscarSimilares(
-        $request->input('query'),  // ← cambiar $request->query por $request->input('query')
-        $bienes,
-        $request->get('top_k', 5)
-    );
+        $resultado = $this->ml->buscarSimilares(
+            $request->input('query'),
+            $bienes,
+            $request->get('top_k', 5)
+        );
 
-    return $this->successResponse($resultado);
-}
+        return $this->successResponse($resultado);
+    }
+
     /**
      * POST /api/v1/ia/detectar-duplicado
      * Detecta si un bien nuevo es duplicado antes de guardarlo.
@@ -96,9 +97,9 @@ class IAController extends BaseApiController
 
         $nuevo = $request->only(['nombre', 'descripcion', 'region_geografica']);
 
-        // Obtener existentes de la BD
+        // Obtener existentes de la BD (limitado para no sobrecargar Groq)
         $repo       = app(EloquentBienCulturalRepository::class);
-        $todos      = $repo->findAll(1, 500);
+        $todos      = $repo->findAll(1, 10);
         $existentes = array_map(fn($b) => $b->toArray(), $todos['data']);
 
         $resultado = $this->ml->detectarDuplicados($nuevo, $existentes);
