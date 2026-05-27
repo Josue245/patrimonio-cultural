@@ -1,0 +1,11 @@
+{
+  "name": "Patrimonio Cultural Junín",
+  "short_name": "PatrimonioJunín",
+  "description": "Registro móvil de bienes culturales con GPS y multimedia",
+  "start_url": "/registro-movil",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1a0f0a",
+  "theme_color": "#c4622d",
+  "prefer_related_applications": false
+}

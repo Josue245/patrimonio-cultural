@@ -40,6 +40,7 @@ return [
         L5Swagger\L5SwaggerServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\RegistroMovilServiceProvider::class,
     ],
     'aliases' => Facade::defaultAliases()->merge([
         'JWTAuth'    => Tymon\JWTAuth\Facades\JWTAuth::class,

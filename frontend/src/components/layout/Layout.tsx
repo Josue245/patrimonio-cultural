@@ -1,6 +1,6 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
-import { MapPin, Search, LogOut, LayoutDashboard, Menu, X, Brain } from 'lucide-react'
+import { MapPin, Search, LogOut, LayoutDashboard, Menu, X, Brain, Smartphone } from 'lucide-react'
 import { useState } from 'react'
 import Chatbot from './Chatbot'
 
@@ -36,6 +36,11 @@ export default function Layout() {
             <Link to="/ia" className="hover:text-andino-200 transition-colors flex items-center gap-1">
               <Brain className="w-4 h-4" /> IA
             </Link>
+            {hasRole(['investigador', 'administrador']) && (
+              <Link to="/registro-movil" className="hover:text-andino-200 transition-colors flex items-center gap-1">
+                <Smartphone className="w-4 h-4" /> Campo
+              </Link>
+            )}
             {hasRole('administrador') && (
               <Link to="/admin" className="hover:text-andino-200 transition-colors flex items-center gap-1">
                 <LayoutDashboard className="w-4 h-4" /> Admin
@@ -70,10 +75,15 @@ export default function Layout() {
         {/* Mobile menu */}
         {menuOpen && (
           <div className="md:hidden border-t border-andino-600 px-4 py-3 flex flex-col gap-3 text-sm">
-            <Link to="/patrimonio" onClick={() => setMenuOpen(false)}>Catálogo</Link>
-            <Link to="/mapa"       onClick={() => setMenuOpen(false)}>Mapa</Link>
-            <Link to="/busqueda"   onClick={() => setMenuOpen(false)}>Búsqueda</Link>
-              <Link to="/ia" onClick={() => setMenuOpen(false)}>IA</Link>
+            <Link to="/patrimonio"    onClick={() => setMenuOpen(false)}>Catálogo</Link>
+            <Link to="/mapa"          onClick={() => setMenuOpen(false)}>Mapa</Link>
+            <Link to="/busqueda"      onClick={() => setMenuOpen(false)}>Búsqueda</Link>
+            <Link to="/ia"            onClick={() => setMenuOpen(false)}>IA</Link>
+            {hasRole(['investigador', 'administrador']) && (
+              <Link to="/registro-movil" onClick={() => setMenuOpen(false)}>
+                📱 Registro de campo
+              </Link>
+            )}
             {hasRole('administrador') && (
               <Link to="/admin" onClick={() => setMenuOpen(false)}>Admin</Link>
             )}
